@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+	<title>南风网盘-我的图片</title>
+	<link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+	<link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+
+	<link rel="stylesheet" th:href="@{u-admin/dist/modules/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/modules/ionicons/css/ionicons.min.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/modules/layui/css/layui.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/modules/summernote/summernote-lite.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/modules/flag-icon-css/css/flag-icon.min.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/css/demo.css}">
+	<link rel="stylesheet" th:href="@{u-admin/dist/css/style.css}">
+	<link rel="stylesheet" th:href="@{plug-ins/xcConfirm/css/xcConfirm.css}">
+
+	<link rel="stylesheet" th:href="@{plug-ins/layui-soul-table/css/soulTable.css}">
+	<style>
+		.files-items{
+			margin-top: -20px;
+			border-bottom: 1px dashed #bdc3c7;
+			border-top: 1px dashed #bdc3c7;
+		}
+		.files-items:hover{
+			background: #F4FBFF;
+		}
+	</style>
+
+</head>
+
+<body>
+<div id="app">
+	<div class="main-wrapper">
+		<div class="navbar-bg"></div>
+		<div th:replace="commons/bar::#top"></div>
+		<div th:replace="commons/bar::#sidebar(currUri='image',statistics = ${statistics})"></div>
+
+		<div class="main-content">
+			<section class="section">
+				<h1 class="section-header">
+					<div><i class="ion ion-folder"></i> 我的图像
+						<p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+					</div>
+				</h1>
+				<div class="row" style="margin-top: -10px;" th:if="${files.size()>0}">
+						<div class="col-12 col-sm-12 col-lg-12">
+							<table id="myTable" ></table>
+						</div>
+					</div>
+				<div class="row" th:if="${files.size() == 0}">
+					<div class="col-12 col-sm-12 col-lg-12">
+						<div class="alert alert-primary alert-has-icon alert-dismissible show fade">
+							<div class="alert-icon"><i class="ion ion-ios-lightbulb-outline"></i></div>
+							<div class="alert-body">
+								<button class="close" data-dismiss="alert">
+									<span>×</span>
+								</button>
+								<div class="alert-title">这里空空的，什么都没有..</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div th:replace="commons/bar::#footer"></div>
+	</div>
+</div>
+<script th:src="@{http://libs.baidu.com/jquery/2.1.4/jquery.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/layui/layui.js}"></script>
+<script th:src="@{plug-ins/xcConfirm/js/xcConfirm.js}"></script>
+
+<script th:inline="none">
+	// 自定义模块
+	layui.config({
+		base: 'ext/',   // 模块目录
+		version: 'v1.5.3'
+	}).extend({             // 模块别名
+		soulTable: 'soulTable'
+	});
+
+	layui.use(['form', 'table','soulTable','util'], function () {
+		var table = layui.table,
+				soulTable = layui.soulTable,
+				$ = layui.$;
+
+		table.render({
+			elem: '#myTable'
+			,toolbar: true
+			,height: 500
+			,page: {
+				layout:['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'],
+				groups: 10
+			}
+			,contextmenu: {
+				// 表头右键菜单配置
+				header: [
+					{
+						name: '复制',
+						icon: 'layui-icon layui-icon-template',
+						click: function(obj) {
+							soulTable.copy(obj.text)
+							layer.msg('复制成功！')
+						}
+					},
+					{
+						name: '导出excel',
+						icon: 'layui-icon layui-icon-export',
+						click: function() {
+							soulTable.export(this.id)
+						}
+					},
+					{
+						name: '字体颜色',
+						icon: 'layui-icon layui-icon-theme',
+						children: [
+							{
+								name: '红色',
+								children: [
+									{
+										name: '大红色',
+										click: function(obj) {
+											obj.elem.css('color', 'red')
+										}
+									},
+									{
+										name: '粉红色',
+										click: function(obj) {
+											obj.elem.css('color', 'pink')
+										}
+									},
+								]
+							},
+							{
+								name: '绿色',
+								click: function(obj) {
+									obj.elem.css('color', '#009688')
+								}
+							}
+						]
+					}
+					,
+					{
+						name: '背景色',
+						icon: 'layui-icon layui-icon-theme',
+						children: [
+							{
+								name: '蓝色',
+								click: function(obj) {
+									obj.elem.css('background', '#01AAED')
+								}
+							},
+							{
+								name: '黄色',
+								click: function(obj) {
+									obj.elem.css('background', '#FFB800')
+								}
+							}
+						]
+					}
+				],
+				// 表格内容右键菜单配置
+				body: [
+
+					{
+						name: '下载',
+						icon: 'layui-icon layui-icon-download-circle',
+						click: function(obj) {
+							let domain = window.location.host;
+							let head = window.location.href.toString().split("//")[0];
+							window.location.href = head+"//"+domain+"/downloadFile?fId="+obj.row.myFileId;
+						}
+					},
+					{
+						name: '分享',
+						icon: 'layui-icon layui-icon-share',
+						click: function(obj) {
+							let domain = window.location.host;
+							let head = window.location.href.toString().split("//")[0];
+							$.ajax({
+								url:"getQrCode?id="+obj.row.myFileId+"&url="+head+"//"+domain,
+								type:"get",
+								async:false,
+								success:function(data){
+									let txt=  "<img src='"+data['imgPath']+"' style='width: 150px;height: 150px'/><br>" +
+											"<input style='width: 80%;font-size: 14px' value='"+data['url']+"'/>";
+									let option = {
+										title: "分享你的文件",
+									};
+									window.wxc.xcConfirm(txt, "custom", option);
+								}
+							});
+						}
+					},
+					{
+						name: '重命名',
+						icon: 'layui-icon layui-icon-edit',
+						click: function(obj) {
+							let html = $('[data-content='+obj.row.myFileName+']').html($('' +
+									"<form id='updateFileNameForm' action='updateFileName' method='post'>" +
+									"<input id='updateFileName' name='myFileName' autocomplete='off' type='text' onblur='checkUpdateFile()' value='"+obj.row.myFileName+"'>" +
+									"<input type='hidden' name='myFileId' value='"+obj.row.myFileId+"'>" +
+									"</form>" +
+									''));
+						}
+					},
+					{
+						name: '预览',
+						icon: 'layui-icon layui-icon-face-surprised',
+						click: function(obj) {
+							if(obj.row.postfix =='.gif'||obj.row.postfix =='.png'||obj.row.postfix =='.jpg'||obj.row.postfix =='.jepg'||postfix=='.bmp'||obj.row.postfix =='.svg'||obj.row.postfix =='.ico'){
+							window.open("/imgPreView?fId="+obj.row.myFileId, "_blank","toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=600, height=600");
+							}
+							else{
+								alert("该类文件暂不支持预览，只支持主流图片格式");
+							}
+						}
+					},
+					{
+						name: '删除',
+						icon: 'layui-icon layui-icon-delete',
+						click: function(obj) {
+							let domain = window.location.host;
+							let head = window.location.href.toString().split("//")[0];
+							window.location.href = head+"//"+domain+"/deleteFile?fId="+obj.row.myFileId;
+						}
+					},
+					{
+						name: '行-黄色',
+						icon: 'layui-icon layui-icon-theme',
+						click: function(obj) {
+							obj.trElem.css('background', 'yellow')
+						}
+					},
+					{
+						name: '蓝色',
+						icon: 'layui-icon layui-icon-theme',
+						click: function(obj) {
+							obj.elem.css('color', 'blue')
+						}
+					}
+				]
+			}
+			,cols: [[
+				{field: 'myFileId', title: '', width: 60, hide: true},
+				{field: 'img', title: '', width: 60, templet: '#t_img'},
+				{field: 'myFileName', title: '名称', width: 250, align: 'center', filter: true, sort: true, templet: '<div><a href="/downloadFile?fId={{d.myFileId}}" class="layui-table-link">{{d.myFileName}}</a></div>'},
+				{field: 'type', title: '类型', width: 75, align: 'center', filter: true, sort: true, templet: '#t_type'},
+				{field: 'postfix', title: '扩展名', width: 100, align: 'center'},
+				{field: 'size', title: '大小', width: 100, align: 'center',filter: true, sort: true, templet: function(d){
+						return d.size>1024?parseInt(d.size/1024)+' MB' : parseInt(d.size)+' KB'
+					}},
+				{field: 'downloadTime', title: '下载次数', width: 100, align: 'center', filter: true, sort: true},
+				{field: 'uploadTime', title: '上传时间', width: 250, align: 'center', filter: {type: 'date[yyyy-MM-dd HH:mm:ss]'}, sort:true, templet:function(d){
+						return layui.util.toDateString(d.uploadTime, 'yyyy-MM-dd HH:mm:ss')
+					}}
+			]]
+			,done: function () {
+				soulTable.render(this)
+			}
+		});
+
+		search({});
+		function search(data) {
+			var loading = layer.load(2);
+
+			$.ajax({
+				url: '/images',
+				type : 'get',
+				data: data,
+				async : true,
+				dataType: 'json',
+				success: function (res) {
+					// myTable.reload({
+					//     data: res.data
+					// })
+					table.reload('myTable', {
+						data: res.data
+					})
+				},
+				complete: function () {
+					layer.close(loading)
+				}
+			})
+		}
+
+		/*table.on('toolbar(myTable)', function(obj){
+			if (obj.event === 'refresh') {
+				// 清除所有筛选条件并重载表格
+				// 参数: tableId
+				search()
+			}
+		});*/
+
+	})
+
+	function checkUpdateFile() {
+		let name = $.trim($("#updateFileName").val());
+		let nameReg = /^[\u4E00-\u9FA5A-Za-z0-9_.-\\()]+$/;
+		if (!nameReg.test(name)) {
+			layer.alert("文件名含有非法字符!\n只能包含【中文、字母、下划线、[.]、- 、()】", {icon: 5});
+			let location = window.location.href;
+			window.location.href = location;
+		}else{
+			$('#updateFileNameForm').submit();
+		}
+	}
+</script>
+<script id="t_img">
+	{{# if(d.type=='1'){ }}
+		<i style="font-size: 24px;color: #3498db" class="layui-icon layui-icon-file-b"></i>
+
+		{{# }else if(d.type=='2'){ }}
+		<i style="font-size: 24px;color: #28a745" class="layui-icon layui-icon-picture"></i>
+
+		{{#}else if(d.type=='3'){ }}
+		<i style="font-size: 24px;color: #FFC107" class="layui-icon layui-icon-video"></i>
+
+		{{#}else if(d.type=='4'){ }}
+		<i style="font-size: 24px;color: #dc3545" class="layui-icon layui-icon-headset"></i>
+		{{#}else if(d.type=='5'){}}
+		<i style="font-size: 24px;color: #343A40" class="layui-icon layui-icon-face-smile"></i>
+		{{# } }}
+</script>
+
+<script id="t_type">
+	{{# if(d.type=='1'){ }}
+		文档
+		{{# }else if(d.type=='2'){ }}
+		图像
+
+		{{#}else if(d.type=='3'){ }}
+		视频
+
+		{{#}else if(d.type=='4'){ }}
+		音乐
+		{{#}else if(d.type=='5'){ }}
+		其他
+		{{# } }}
+</script>
+<script th:src="@{u-admin/dist/modules/jquery.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/popper.js}"></script>
+<script th:src="@{u-admin/dist/modules/tooltip.js}"></script>
+<script th:src="@{u-admin/dist/modules/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/nicescroll/jquery.nicescroll.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js}"></script>
+<script th:src="@{u-admin/dist/js/sa-functions.js}"></script>
+
+<script th:src="@{u-admin/dist/modules/chart.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/summernote/summernote-lite.js}"></script>
+
+<script th:src="@{u-admin/dist/js/scripts.js}"></script>
+<script th:src="@{u-admin/dist/js/custom.js}"></script>
+<script th:src="@{u-admin/dist/js/demo.js}"></script>
+</body>
+</html>

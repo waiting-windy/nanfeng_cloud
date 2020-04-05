@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+    <title>南风网盘-上传文件</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/ionicons/css/ionicons.min.css}">
+    <link rel="stylesheet" th:href="@{//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/summernote/summernote-lite.css}">
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/flag-icon-css/css/flag-icon.min.css}">
+    <link rel="stylesheet" th:href="@{u-admin/dist/css/demo.css}">
+    <link rel="stylesheet" th:href="@{u-admin/dist/css/style.css}">
+    <link rel="stylesheet" th:href="@{plug-ins/xcConfirm/css/xcConfirm.css}">
+    <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css}">
+    <style>
+        .files-items{
+            margin-top: -20px;
+            border-bottom: 1px dashed #bdc3c7;
+            border-top: 1px dashed #bdc3c7;
+        }
+        .files-items:hover{
+            background: #F4FBFF;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+        <div th:replace="commons/bar::#top"></div>
+        <div th:replace="commons/bar::#sidebar(currUri='upload',statistics = ${statistics})"></div>
+
+        <div class="main-content">
+            <section class="section">
+                <h1 class="section-header">
+                    <div><i class="ion ion-folder"></i> 上传文件 <span style="color: red;font-size: 14px" th:if="${error != null}" th:text="${error}"></span></div>
+                </h1>
+                <div class="row">
+                    <div class="col-9 col-sm-9 col-lg-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>当前路径</h4>
+                                <nav aria-label="breadcrumb" class="empty-space">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a
+                                                th:href="@{/upload(fId=${nowFolder.fileFolderId})}"
+                                                title="刷新"><i
+                                                class="icon ion-refresh"></i></a>
+                                        </li>
+                                        <li th:class="${nowFolder.fileFolderId == 0?'breadcrumb-item active':'breadcrumb-item'}">
+                                                            <span th:if="${nowFolder.fileFolderId == 0}"
+                                                                  th:text="根目录"></span><a style="font-weight: bold"
+                                                                                          th:if="${nowFolder.fileFolderId != 0}"
+                                                                                          href="upload">根目录</a></li>
+                                        <li th:each="l:${location}" class="breadcrumb-item"><a
+                                                style="font-weight: bold"
+                                                th:href="@{/upload(fId=${l.fileFolderId},fName=${l.fileFolderName})}"
+                                                th:text="${l.fileFolderName}"></a></li>
+                                        <li th:if="${nowFolder.fileFolderId != 0}"
+                                            class="breadcrumb-item active" aria-current="page"
+                                            th:text="${nowFolder.fileFolderName}"></li>
+                                        <li th:if="${nowFolder.fileFolderId != 0}"
+                                            class="breadcrumb-item"><a
+                                                th:href="@{/upload(fId=${nowFolder.parentFolderId})}"
+                                                title="返回上一层"><i
+                                                class="icon ion-arrow-return-left"></i></a>
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn layui-btn-normal" id="testList">选择文件</button>
+                                    <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+                                    <!--<button type="button" class="layui-btn" id="test2">多图片上传</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm layui-hide" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="demo2"></div>
+                                    </blockquote>-->
+                                    <div class="layui-upload-list">
+                                        <table class="layui-table">
+                                            <thead>
+                                            <tr><th>文件名</th>
+                                                <th>大小</th>
+                                                <th>进度</th>
+                                                <th>状态</th>
+                                                <th>操作</th>
+                                            </tr></thead>
+                                            <tbody id="demoList"></tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-sm-3 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>预览</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" style="margin-top: -10px;">
+                                    <div class="col-12 col-sm-12 col-lg-12 table-responsive">
+                                        <table class="table tab-bordered text-nowrap" id="files-table">
+                                            <tr th:each="folder:${folders}" class="files-items folders">
+                                                <td><span style="display: none" th:text="${folder.fileFolderId}"></span><i style="font-size: 24px;color: orange" class="icon ion-android-folder"></i></td>
+                                                <td>
+                                                    <a th:href="@{/upload(fId=${folder.fileFolderId},fName=${folder.fileFolderName})}" style="font-weight: 700;color: black" th:text="${folder.fileFolderName}"></a>
+                                                </td>
+                                                <!--<td style="font-weight: 300" th:text="${#dates.format(folder.time,'yyyy-MM-dd HH:mm')}"></td>-->
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <span id="nowF" style="display: none" th:text="${nowFolder.fileFolderId}"></span>
+            <span id="preF" style="display: none" th:text="${nowFolder.parentFolderId}"></span>
+            <span id="tarFolder" style="display: none"></span>
+        </div>
+        <div th:replace="commons/bar::#footer"></div>
+    </div>
+</div>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/layui/layui.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js}"></script>
+<script>
+    $(function () {
+        $('.folders').dblclick(function () {
+            let id = $(this).children("td").children("span").html();
+            let location = window.location.href;
+            let strings = location.split("?");
+            if (id != ""){
+                window.location.href = strings[0]+"?fId="+id;
+            }else{
+                return;
+            }
+        });
+        $('.folders').hover(function () {
+            let id = $(this).children("td").children("span").html();
+            $('#tarFolder').html(id);
+            $(this).siblings().removeClass('flag');
+            $(this).addClass('flag');
+        },function () {
+        });
+    });
+</script>
+<script th:src="@{plug-ins/context-menu/js/jquery.contextMenu.min.js}"></script>
+<script th:src="@{plug-ins/xcConfirm/js/xcConfirm.js}"></script>
+<script>
+    $.contextMenu({
+        width: 100, // width
+        itemHeight: 30, // 菜单项height
+        bgColor: "#fff", // 背景颜色
+        color: "#333", // 字体颜色
+        fontSize: 12, // 字体大小
+        hoverBgColor: "#3498db", // hover背景颜色
+        selector: '.folders',
+        items: { // 菜单项
+            "open": {
+                name: "打开",
+                icon: "fa-folder-open",
+                callback: function () {
+                    let id = $('#tarFolder').html();
+                    let location = window.location.href;
+                    let strings = location.split("?");
+                    if (id != "") {
+                        window.location.href = strings[0] + "?fId=" + id;
+                    } else {
+                        return;
+                    }
+                }
+            },
+
+            "return": {
+                name: "返回上一级",
+                icon: "fa-reply",
+                callback: function () {
+                    toPreFolder();
+                }
+            },
+        }
+
+    });
+    function toPreFolder() {
+        let location = window.location.href;
+        let strings = location.split("?");
+        let pre = $('#preF').html();
+        if (pre != ""){
+            window.location.href = strings[0]+"?fId="+pre;
+        }else{
+            return;
+        }
+    }
+
+</script>
+
+<script th:inline="none">
+    layui.use(['upload','element'], function(){
+        let $ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element;
+        let thisFileArray = new Array(),thisFileIndex = 0;//正在上传的文件
+        //多文件列表示例
+        let demoListView = $('#demoList')
+            ,uploadListIns = upload.render({
+            elem: '#testList'
+            ,url: 'uploadFile' //改成您自己的上传接口
+            ,accept: 'file'
+            ,multiple: true
+            ,auto: false
+            ,size: 51200
+            ,headers: {
+                id: $('#nowF').html()
+            }
+            ,bindAction: '#testListAction'
+            ,number: 10
+            ,progress: function (n, elem) {
+                let percent = n + '%'; //获取进度百分比
+                element.progress('demo', percent); //可配合 layui 进度条元素使用
+                console.log(elem);
+            }
+            ,choose: function(obj){
+
+                let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                //读取本地文件
+                obj.preview(function(index, file, result){
+                    thisFileArray.push(index);
+                    let file_size = ((file.size/1024).toFixed(1))<1024?((file.size/1024).toFixed(1)+' KB'):(((file.size/1024)/1024).toFixed(1)+' MB')
+                    let tr = $(['<tr id="upload-'+ index +'">'
+                        ,'<td>'+ file.name +'</td>'
+                        ,'<td>'+file_size+'</td>'
+                        ,'<td><div class="layui-progress layui-progress-big" lay-showPercent="yes" lay-filter="demo">\n' +
+                        '  <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>\n' +
+                        '</div></td>'
+                        ,'<td>等待上传</td>'
+                        ,'<td>'
+                        ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                        ,'</td>'
+                        ,'</tr>'].join(''));
+
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function(){
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function(){
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    });
+
+                    demoListView.append(tr);
+                });
+            }
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+
+                layer.load(); //上传loading
+            }
+            ,done: function(res, index, upload){
+                if(res.code==0){ //上传成功
+                    let tr = demoListView.find('tr#upload-'+ index)
+                        ,tds = tr.children();
+                    tds.eq(3).html('<span style="color: #5FB878;">上传成功</span>');
+                    tds.eq(4).html(''); //清空操作
+                    layer.closeAll('loading'); //关闭loading
+                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                }
+                else if(res.code==1){
+                    layer.alert(res.msg, {icon: 6});
+                }
+                else if(res.code==2){
+                    layer.alert(res.msg, {icon: 6});
+                }
+                else if(res.code==3){
+                    layer.alert(res.msg, {icon: 6});
+                }
+                else if(res.code==4){
+                    layer.alert(res.msg, {icon: 6});
+                }
+
+                this.error(index, upload);
+            }
+            ,error: function(index, upload){
+                let tr = demoListView.find('tr#upload-'+ index)
+                    ,tds = tr.children();
+                tds.eq(3).html('<span style="color: #FF5722;">上传失败</span>');
+                tds.eq(4).find('.demo-reload').removeClass('layui-hide'); //显示重传
+                layer.closeAll('loading'); //关闭loading
+            }
+        });
+
+
+        /*//多图片上传
+        upload.render({
+            elem: '#test2'
+            ,url: 'uploadFile' //改成您自己的上传接口
+            ,multiple: true
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo2').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
+                });
+            }
+            ,done: function(res){
+                //上传完毕
+            }
+        });*/
+
+
+
+       /* $('#test2').click(function () {
+            $('.layui-elem-quote').removeClass('layui-hiden');
+        })*/
+
+    });
+</script>
+<script th:src="@{u-admin/dist/modules/popper.js}"></script>
+<script th:src="@{u-admin/dist/modules/tooltip.js}"></script>
+<script th:src="@{u-admin/dist/modules/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/nicescroll/jquery.nicescroll.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/scroll-up-bar/dist/scroll-up-bar.min.js}"></script>
+<script th:src="@{u-admin/dist/js/sa-functions.js}"></script>
+
+<script th:src="@{u-admin/dist/modules/chart.min.js}"></script>
+<script th:src="@{u-admin/dist/modules/summernote/summernote-lite.js}"></script>
+
+<script th:src="@{u-admin/dist/js/scripts.js}"></script>
+<script th:src="@{u-admin/dist/js/custom.js}"></script>
+<script th:src="@{u-admin/dist/js/demo.js}"></script>
+</body>
+</html>

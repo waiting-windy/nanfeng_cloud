@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>南风网盘</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{css/403.css}" media="all">
+</head>
+<body>
+<h1>Forbidden!</h1>
+<h2>Code 403</h2>
+<button class="layui-btn layui-btn-normal" id="home">返回首页</button>
+<div id="jail">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         version="1.1"
+         viewBox="0 0 1000 1000"
+         preserveAspectRatio="xMinYMin"
+         id="spinner"
+    >
+        <!--     thank you https://stackoverflow.com/posts/15496546/revisions -->
+        <defs>
+            <path id="textPath" d="M 250 500 A 250,250 0 1 1 250 500.0001"/>
+        </defs>
+        <text x="0" y="0" text-anchor="left" style="font-size:90pt;"><textPath xlink:href="#textPath" startOffset="0%" >MOUSE JAIL</textPath><textPath xlink:href="#textPath" startOffset="50%" >MOUSE JAIL</textPath></text>
+    </svg>
+    <div id="cursor"></div>
+</div>
+
+<script th:src="@{js/403.js}"></script>
+<script th:src="@{u-admin/dist/modules/layui/layui.js}"></script>
+<script data-th-inline="javascript" type="text/javascript">
+    layui.use(['jquery'], function () {
+        var $ = layui.jquery,
+            ctx = [[@{/}]],
+            $view = $('#home');
+        $view.on('click', function () {
+            window.location.href = ctx + 'main';
+        });
+    });
+</script>
+</body>
+</html>

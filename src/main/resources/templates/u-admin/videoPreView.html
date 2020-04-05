@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>视频在线播放</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <!--封装好的视频布局样式-->
+    <link rel="stylesheet" th:href="@{plug-ins/player/css/style.css}">
+    <link rel="stylesheet" th:href="@{plug-ins/player/css/jsmodern.min.css}">
+
+    <script th:src="@{plug-ins/player/js/jquery.min.js} "></script>
+    <!--mp4视频插件-->
+    <script th:src="@{plug-ins/player/js/jsmodern.min.js}"></script>
+    <style>
+        #video { width: 970px; height: 594px; margin: 0 auto; position: relative; }
+        #video video { width: 100%; height: 100%; object-fit: fill; }
+        .VideoBtn { position: absolute; left: 50%; top: 50%; display: block; width: 70px; height: 70px; margin-left: -35px; margin-top: -35px; cursor: pointer; z-index: 10; }
+    </style>
+    <!--视频插件调用方法-->
+    <script>
+        $(function () {
+            //视频
+            jsModern.video("#video");
+            //播放视频
+            $(".VideoBtn").click(function () {
+                let video = document.getElementById("videoShow");
+                video.play();
+                $('.VideoBtn').hide();
+            })
+            //监听视频的播放状态
+            let video = document.getElementById("videoShow");
+            video.oncanplay = function () {
+                $(".VideoBtn").show();
+                //$("#video").attr("poster","");
+            }
+            //视频播放事件
+            video.onplay = function () {
+                $("#videoShow").attr("poster", "");
+                $(".VideoBtn").hide();
+            };
+            video.onplaying = function () {
+                $(".VideoBtn").hide();
+            };
+
+            //视频暂停事件
+            video.onpause = function () {
+                $(".VideoBtn").show();
+            };
+            //点击视频周围暂停播放图片出现
+            video.onclick = function () {
+                if (video.paused) {
+                    $(".VideoBtn").hide();
+                    video.play();
+                } else {
+                    $(".VideoBtn").show();
+                    video.pause();
+                }
+            };
+        })
+    </script>
+</head>
+
+<body class="mkeBody">
+
+<div class="mkeContentBox">
+    <!--效果html开始-->
+    <div id="video">
+        <i id="temp"></i>
+        <span class="VideoBtn"><img src="plug-ins/player/images/bo1.png"></span>
+    </div>
+
+</div>
+<script>
+
+    function getQueryletiable(letiable)
+    {
+        let query = window.location.search.substring(1);
+        let lets = query.split("&");
+        for (let i=0;i<lets.length;i++) {
+            let pair = lets[i].split("=");
+            if(pair[0] == letiable){return pair[1];}
+        }
+        return(false);
+    }
+    let fileId = getQueryletiable("fId");
+    $("#temp").append("<video "+"id='videoShow'"+" src="+"/viewVideo?fId="+fileId+" />");
+</script>
+</body>
+
+</html>

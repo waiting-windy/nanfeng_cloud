@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>南风云盘</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+    <link rel="stylesheet" type="text/css" th:href="@{css/planet.css}" />
+    <link rel="stylesheet" th:href="@{u-admin/dist/modules/layui/css/layui.css}">
+</head>
+
+<body>
+    <div class="layui-container" style="height: 80%">
+        <div class="layui-row" style="margin-top: 10%"></div>
+            <div class="description layui-col-md10">
+                <!--判断是否显示，使用if, ${}可以使用工具类，可以看thymeleaf的中文文档-->
+                <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+                <h1>南风网盘</h1>
+                <hr>
+                <p>
+                    南风网盘（英文名：nanfeng-cloud）是由个人开发者推出的在线存储服务。
+                </p>
+                <hr>
+                <p>
+                    用户可以轻松实现文件云存储，并可跨终端随时随地查看和分享。<br>
+                    无需注册，使用QQ一键登录，注重用户的隐私。<br>
+                    具有安全、简约、高效、不限速的特点。
+                </p>
+                <hr>
+                <p class='author'>
+                    作者：<a href="http://www.lizeyu.xyz/about/" style="color: #fff">南风</a>
+                </p>
+                <p>
+                    腹有诗书气自华。 ——〔中〕苏轼
+                </p>
+                <hr>
+                <a href="login"><img style="width: 80px" src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/bt_white_76X24.png" title="使用QQ登录" alt="使用QQ登录"></a>
+            </div>
+        </div>
+
+    </div>
+    <div class='solar-syst' style="position: fixed;top: 5%;left: 0%">
+        <div class='sun'></div>
+        <div class='mercury'></div>
+        <div class='venus'></div>
+        <div class='earth'></div>
+        <div class='mars'></div>
+        <div class='jupiter'></div>
+        <div class='saturn'></div>
+        <div class='uranus'></div>
+        <div class='neptune'></div>
+        <div class='pluto'></div>
+        <div class='asteroids-belt'></div>
+    </div>
+</body>
+</html>

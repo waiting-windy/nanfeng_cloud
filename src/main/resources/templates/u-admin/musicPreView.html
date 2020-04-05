@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>音乐播放器</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+
+    <link rel="stylesheet" th:href="@{plug-ins/music/css/base.css}">
+
+    <script th:src="@{plug-ins/music/js/jquery.min.js}"></script>
+
+</head>
+<body>
+
+<div id="audio" class="audio audio-off">
+
+
+
+    <div class="audio-head">
+        <div class="audio-head-tittle">
+            <div class="audio-head-tittle-text audio-head-tittle-text-off"></div>
+        </div>
+        <div class="audio-head-tittle-by"></div>
+    </div>
+    <div class="add"></div>
+    <div class="min-time"></div>
+    <div class="audio-img">
+        <canvas id="audio-img-canvas" width="200px" height="200px"></canvas>
+        <div class="audio-img-cover audio-img-cover-off"></div>
+        <canvas id="audio-img-canvas-play" class="audio-img-canvas-play-off" width="45px" height="200px"></canvas>
+    </div>
+    <div class="audio-by">
+        <div class="audio-by-all">
+            <span class="audio-by-now"></span>
+        </div>
+        <div class="audio-by-text">
+            <span class="audio-by-text-now">00:00</span>
+            <span class="audio-by-text-all">00:00</span>
+        </div>
+    </div>
+    <div class="audio-btn">
+        <div class="audio-btn-play audio-btn-play-off audio-btn-play-off-a"></div>
+        <div class="audio-btn-sound"></div>
+    </div>
+    <div class="audio-sound">
+        <div class="audio-sound-all">
+            <span class="audio-sound-now"></span>
+            <span class="audio-sound-art"></span>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{plug-ins/music/js/base.js}" ></script>
+<script>
+
+    function getQueryletiable(letiable)
+    {
+        let query = window.location.search.substring(1);
+        let lets = query.split("&");
+        for (let i=0;i<lets.length;i++) {
+            let pair = lets[i].split("=");
+            if(pair[0] == letiable){return pair[1];}
+        }
+        return(false);
+    }
+    let fileId = getQueryletiable("fId");
+
+    $("#audio").append("<audio id="+" audio-my" +" src="+"/viewMusic?fId="+fileId+" preload="+"metadata"+" />");
+</script>
+
+<div style="text-align:center;margin:150px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+    <p>适用浏览器：360、FireFox、Chrome、Opera,不支持Safari、IE8及以下浏览器。</p>
+</div>
+</body>
+</html>

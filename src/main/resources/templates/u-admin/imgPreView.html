@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>图片预览</title>
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="bookmark" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" th:href="@{plug-ins/jquery-viewer/css/viewer.min.css}">
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #showPicture {
+            text-align: center;
+        }
+        #showPicture > img {
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js}" type="text/javascript"></script>
+
+<script type="text/javascript" th:src="@{plug-ins/jquery-viewer/js/viewer.js}"></script>
+<script type="text/javascript" th:src="@{plug-ins/jquery-viewer/js/jquery-viewer.min.js}"></script>
+<div id="showPicture" >
+</div>
+
+<script>
+    function getQueryletiable(letiable)
+    {
+        let query = window.location.search.substring(1);
+        let lets = query.split("&");
+        for (let i=0;i<lets.length;i++) {
+            let pair = lets[i].split("=");
+            if(pair[0] == letiable){return pair[1];}
+        }
+        return(false);
+    }
+     let fileId = getQueryletiable("fId");
+        $("#showPicture").append("<img src="+"/viewImg?fId="+fileId+">");
+</script>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        $('#showPicture').viewer({
+            navbar: false,
+            button: true,
+            toolbar: false,
+            title: false
+        });
+    });
+
+
+</script>
+</body>
+
+</html>

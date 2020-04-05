@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jQuery网页视频在线播放器代码 - 【科e互联】</title>
+<!--封装好的视频布局样式-->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/jsmodern.min.css">
+<script src="js/jquery.min.js"></script>
+<!--mp4视频插件-->
+<script src="js/jsmodern.min.js"></script>
+<style>
+#video { width: 970px; height: 594px; margin: 0 auto; position: relative; }
+#video video { width: 100%; height: 100%; object-fit: fill; }
+.VideoBtn { position: absolute; left: 50%; top: 50%; display: block; width: 70px; height: 70px; margin-left: -35px; margin-top: -35px; cursor: pointer; z-index: 10; }
+</style>
+
+<!--视频插件调用方法-->
+<script>
+$(function () {
+	//视频
+	jsModern.video("#video");
+	//播放视频
+	$(".VideoBtn").click(function () {
+		var video = document.getElementById("videoShow");
+		video.play();
+		$('.VideoBtn').hide();
+	})
+	//监听视频的播放状态
+	var video = document.getElementById("videoShow");
+	video.oncanplay = function () {
+		$(".VideoBtn").show();
+		//$("#video").attr("poster","");
+	}
+	//视频播放事件
+	video.onplay = function () {
+		$("#videoShow").attr("poster", "");
+		$(".VideoBtn").hide();
+	};
+	video.onplaying = function () {
+		$(".VideoBtn").hide();
+	};
+
+	//视频暂停事件
+	video.onpause = function () {
+		$(".VideoBtn").show();
+	};
+	//点击视频周围暂停播放图片出现
+	video.onclick = function () {
+		if (video.paused) {
+			$(".VideoBtn").hide();
+			video.play();
+		} else {
+			$(".VideoBtn").show();
+			video.pause();
+		}
+	};
+})
+</script>
+</head>
+<body class="mkeBody">
+<div class="mkeHeadBox">jQuery网页视频在线播放器代码</div>
+<div class="mkeContentBox">
+<!--效果html开始-->
+<div id="video">
+  <video src="http://localhost:8080/viewVideo?fId=234" id="videoShow"></video>
+  <span class="VideoBtn"><img src="images/bo1.png"></span>
+</div>
+<!--效果html结束-->
+</div>
+<div class="mkeFooterBox">
+<p>科e互联网页特效集锦---更多特效请访问 <a class="mkeURL" href="http://www.internetke.com">www.internetke.com</a></p>
+<p>本站导航：
+<a href="http://www.internetke.com/" target="_blank" class="cor_bs">网站建设</a> | 
+<a href="http://www.internetke.com/material/" target="_blank" class="cor_bs">网页素材</a> | 
+<a href="http://www.internetke.com/effects/" target="_blank" class="cor_bs">网页特效</a> | 
+<a href="http://www.internetke.com/share/" target="_blank" class="cor_bs">设计分享</a> | 
+<a href="http://www.internetke.com/tutorial/" target="_blank" class="cor_bs">建站教程</a> | 
+<a href="http://www.internetke.com/model/" target="_blank" class="cor_bs">网站模版</a> | 
+<a href="http://www.internetke.com/appreciate/" target="_blank" class="cor_bs">酷站赏析</a>
+</p>
+<p>＊尊重他人劳动成果，转载请自觉注明出处！注：此代码为【科e整理/原创特效】仅供学习交流，请勿用于商业用途。
+<a target="_blank" href="http://wp.qq.com/wpa/qunwpa?idkey=a7df3558c291e0407375b9ad649d96a6e507286ffeb0650c65a221d1500a0779" class="mkeButton" title="北京网站建设,网页特效QQ交流群-科e互联">加入QQ交流群</a></p>
+</div>
+</body>
+</html>
