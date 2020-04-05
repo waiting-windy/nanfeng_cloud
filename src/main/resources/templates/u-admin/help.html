@@ -62,10 +62,11 @@
 										<div class="accordion-body collapse" id="panel-body-2" data-parent="#accordion">
 											<p style="text-indent: 2em">
 												由于服务器的压力，普通用户最多有1024MB（1GB）的存储空间。
-												且上传的单个文件最大为50MB。莫提网盘保证用户下载文件的速度不作限制。
+												由于服务器带宽仅为1MB/s，故上传的单个文件最大为50MB，但可以同时上传10个，上传状态以实际状态为准，进度条不属实。
+												南风网盘保证用户下载文件的速度不作限制，有本人宽带决定。
 											</p>
 											<hr>
-											<small>纯粹个人开发,生活太难了。</small>
+											<small>学生开发，难以优化硬件环境。</small>
 										</div>
 									</div>
 									<div class="accordion">
@@ -74,16 +75,11 @@
 										</div>
 										<div class="accordion-body collapse" id="panel-body-3" data-parent="#accordion">
 											<p style="text-indent: 2em">
-												为了能够带来更加便捷简约的体验，莫提网盘放弃了传统的登录方式，使用腾讯QQ的第三方登录。
-												这样可以有效的解决用户因长期未使用而忘记账号密码的情况。同时也可以将用户的账号安全交给
-												更加权威、安全系数更高的腾讯QQ团队。
-											</p>
-											<p style="text-indent: 2em">
-												于此同时，莫提网盘在注册也做到了便捷简约，甚至用户到感觉不到具有注册的存在。
-												实际上，在用户第一次登录莫提网盘的时候，便完成了注册的逻辑。
+												由于暂时开发为个人版本，我放弃了传统的登录注册，实在是写烂了。使用腾讯QQ的第三方登录。
+												采用Autho2认证，安全系数更高。后面会增加手机登录，有能力者可以PullRequest。
 											</p>
 											<hr>
-											<small>南风网盘承诺不会挖掘用户的任何隐私信息。</small>
+											<small>南风本人承诺不会挖掘用户的任何隐私信息。</small>
 										</div>
 									</div>
 									<div class="accordion">
@@ -95,12 +91,12 @@
 												切换路径支持：双击目录、点击目录名、鼠标右键菜单（移动端使用长按的方式）三种方式
 											</p>
 											<p style="text-indent: 2em">
-												新加预览文件：鼠标右键点击实现预览，目前多媒体文件只支持MP3、MP4格式
+												新加预览文件：鼠标右键点击列表实现预览，目前多媒体文件只支持MP3、MP4格式。
 											</p>
 											<p style="text-indent: 2em">
 												上传文件需要选定目录（默认为根目录），预览框内展示出当前目录下的所有文件夹。
-												进入想要上传文件的目录后，可以选取文件（支持多文件选取与上传），之后可以全选文件后者勾选指
-												定文件进行上传。等待进度条到达100%时，即上传成功。
+												进入想要上传文件的目录后，可以选取文件，支持10个文件同时上传。由于服务器压力大，
+												请根据实际情况尽量合理上传，否则可能会崩，导致需要重新上传。
 											</p>
 											<p style="text-indent: 2em">
 												可以通过点击文件名、双击文件、鼠标右键菜单（移动端使用长按的方式）三种方式下载文件。如果文件
@@ -115,7 +111,7 @@
 										<div class="accordion-body collapse" id="panel-body-5" data-parent="#accordion">
 											<p style="text-indent: 2em">
 												南风网盘还支持新建文件夹、重命名文件夹、删除文件夹（同时删除里面的文件）、重命名文件、
-												文件的分享、文件的删除等，这些你都可以使用鼠标右键菜单实现（移动端长按）。
+												文件的分享、文件的删除等，这些你都可以使用鼠标右键菜单实现（移动端长按）。后续希望加上移动文件，回收站功能。
 											</p>
 										</div>
 									</div>
@@ -126,7 +122,18 @@
 										<div class="accordion-body collapse" id="panel-body-6" data-parent="#accordion">
 											<p>
 												个人博客：<a href="http://www.lizeyu.xyz/">南风</a>
+												本项目GitHub：<a href="https://github.com/waiting-windy/nanfeng_cloud">https://github.com/waiting-windy/nanfeng_cloud</a>
 												个人邮箱：<a href="mailto:lizeyu955@gmail.com">lizeyu955@gmail.com</a>
+											</p>
+											<p>
+												TODO: 上传进度条根据服务端实时显示<br/>
+												TODO: 后台FTP并发上传<br/>
+												TODO: 文件移动功能<br/>
+												TODO: 回收站功能<br/>
+												TODO: 优化音乐、视频在线预览
+											</p>
+											<p>
+												希望有认真对待协作开发的大佬，积极Pull，需要数据库文件，请联系我。
 											</p>
 										</div>
 									</div>
@@ -172,7 +179,7 @@
 												<div class="carousel-caption d-none d-md-block">
 													<h5></h5>
 													<p>
-														可跨终端随时随地管理、下载、分享文件。文件的分类查看与管理。
+														可跨终端随时随地管理、下载、分享、预览文件。文件的分类查看与管理。
 													</p>
 												</div>
 											</div>
