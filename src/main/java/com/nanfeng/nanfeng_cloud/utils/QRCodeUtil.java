@@ -18,7 +18,7 @@ import java.util.Hashtable;
 
 /**
  * @Description 二维码生成工具类
- * @Author xw
+ * @Author nanfeng
  * @Date 12:14 2020/2/12
  * @Param  * @param null
  * @return

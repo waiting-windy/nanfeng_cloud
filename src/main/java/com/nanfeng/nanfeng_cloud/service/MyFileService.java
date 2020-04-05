@@ -12,7 +12,7 @@ public interface MyFileService{
 
     /**
      * @Description 根据文件的id删除文件
-     * @Author xw
+     * @Author nanfeng
      * @Date 2020/2/9 15:49
      * @Param [myFileId]
      * @Return Integer
@@ -21,7 +21,7 @@ public interface MyFileService{
 
     /**
      * @Description 根据父文件夹的id删除文件
-     * @Author xw
+     * @Author nanfeng
      * @Date 2020/2/9 15:49
      * @Param [id]
      * @Return Integer
@@ -30,7 +30,7 @@ public interface MyFileService{
 
     /**
      * @Description 添加文件
-     * @Author xw
+     * @Author nanfeng
      * @Date 2020/2/9 15:50
      * @Param [myFile]
      * @Return Integer
@@ -39,7 +39,7 @@ public interface MyFileService{
 
     /**
      * @Description 根据文件id获得文件
-     * @Author xw
+     * @Author naneng
      * @Date 2020/2/9 22:00
      * @Param [myFileId]
      * @Return com.molihub.entity.MyFile
@@ -48,7 +48,7 @@ public interface MyFileService{
     MyFile getFileByFileId(Integer myFileId);
     /**
      * @Description 根据文件id修改文件
-     * @Author xw
+     * @Author nanfneg
      * @Date 2020/2/9 15:55
      * @Param [record]
      * @Return Integer
@@ -57,7 +57,7 @@ public interface MyFileService{
 
     /**
      * @Description 获得仓库根目录下的所有文件
-     * @Author xw
+     * @Author nanfeng
      * @Date 23:53 2020/2/9
      * @Param [fileStoreId]
      * @return java.util.List<com.molihub.entity.MyFile>
@@ -66,7 +66,7 @@ public interface MyFileService{
 
     /**
      * @Description 根据父文件夹id获得文件
-     * @Author xw
+     * @Author nanfeng
      * @Date 0:06 2020/2/10
      * @Param [parentFolderId]
      * @return java.util.List<com.molihub.entity.MyFile>
@@ -75,7 +75,7 @@ public interface MyFileService{
 
     /**
      * @Description 根据类别获取文件
-     * @Author xw
+     * @Author nanfeng
      * @Date 10:13 2020/2/26
      * @Param [storeId, type]
      * @return java.util.List<com.moti.entity.MyFile>
@@ -84,7 +84,7 @@ public interface MyFileService{
 
     /**
      * @Description 获取仓库的统计信息
-     * @Author xw
+     * @Author nanfeng
      * @Date 21:47 2020/2/10
      * @Param [id]
      * @return com.molihub.entity.FileStoreStatistics
