@@ -1,0 +1,60 @@
+# 配置项目名和session的过期时间
+server:
+  servlet:
+    context-path: /
+    session:
+      timeout: 60m
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8080
+
+# 配置Mybatis
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.nanfeng.nanfeng_cloud.entity
+
+spring:
+  #  静态资源的访问路径
+  mvc:
+    static-path-pattern: /**
+  datasource:
+    # 配置数据源
+    username: root
+    password: 111111
+    url: jdbc:mysql://119.3.212.23:3306/moti-cloud?serverTimezone=Hongkong&useAffectedRows=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    #Spring Boot 默认是不注入这些属性值的，需要自己绑定
+    #druid 数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+    #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+    #则导入 log4j 依赖即可，Maven 地址： https://mvnrepository.com/artifact/log4j/log4j
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500  # 配置ThymeLeaf模板缓存
+  thymeleaf:
+    cache: false
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  # 配置文件上传相关
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB

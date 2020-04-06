@@ -266,9 +266,6 @@
                     demoListView.append(tr);
                 });
             }
-            ,allDone: function(obj){ //当文件全部被提交后，才触发
-                layer.alert("上传结束\n共:"+obj.total+" 成功:"+obj.successful+" 失败:"+obj.aborted, {icon: 6});
-            }
             ,done: function(res, index, upload){
                 if(res.code==0){ //上传成功
                     let tr = demoListView.find('tr#upload-'+ index)
