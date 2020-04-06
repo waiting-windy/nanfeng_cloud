@@ -208,6 +208,7 @@
 </script>
 
 <script th:inline="none">
+    let hasSaved = false;//是否有输入的内容未保存标志，初始值为false
     layui.use(['upload','element'], function(){
         let $ = layui.jquery
             ,upload = layui.upload
@@ -273,6 +274,8 @@
                 });
             }
             ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                $('#testList').addClass('layui-btn-disabled');
+                $('#testList').attr('disabled',"true");//添加disabled属性
                 $('#testListAction').addClass('layui-btn-disabled');
                 $('#testListAction').attr('disabled',"true");//添加disabled属性
             }
@@ -300,9 +303,13 @@
                 this.error(index, upload);
             }
             ,allDone: function(obj){ //当文件全部被提交后，才触发
+
+                $('#testList').removeClass('layui-btn-disabled');
+                $('#testList').removeAttr("disabled"); //移除disabled属性
                 $('#testListAction').removeClass('layui-btn-disabled');
                 $('#testListAction').removeAttr("disabled"); //移除disabled属性
                 lineIndex=0;
+                changeState();
             }
             ,error: function(index, upload){
                 let tr = demoListView.find('tr#upload-'+ index)
@@ -310,7 +317,10 @@
                 tds.eq(3).html('<span style="color: #FF5722;">上传失败</span>');
                 tds.eq(4).find('.demo-reload').removeClass('layui-hide'); //显示重传
             }
+
         });
+
+
 
 
         /*//多图片上传
@@ -336,6 +346,20 @@
         })*/
 
     });
+
+
+    // 关闭窗口时弹出确认提示
+    window.onbeforeunload=function(e){
+        // 只有在标识变量is_confirm不为false时，才弹出确认提示
+        if(hasSaved == false){
+             let e = window.event||e;
+             e.returnValue=("确定离开当前页面吗？,上传还未结束");
+        }
+    };
+    //保存了则改变状态
+    function changeState() {
+        hasSaved = true;
+    }
 </script>
 <script th:src="@{u-admin/dist/modules/popper.js}"></script>
 <script th:src="@{u-admin/dist/modules/tooltip.js}"></script>
