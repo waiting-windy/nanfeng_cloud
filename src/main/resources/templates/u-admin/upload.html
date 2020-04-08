@@ -213,7 +213,9 @@
         let $ = layui.jquery
             ,upload = layui.upload
             ,element = layui.element;
-        let lineIndex = 0;//正在上传的文件，为了保证每个传输任务的进度条都是本身
+
+        let thisFileArray = new Array(),thisFileIndex = 0;//正在上传的文件
+
         //多文件列表示例
         let demoListView = $('#demoList')
             ,uploadListIns = upload.render({
@@ -227,29 +229,35 @@
                 id: $('#nowF').html()
             }
             ,bindAction: '#testListAction'
-            ,number: 6
+            ,number: 10
             ,progress: function (n, elem) {
 
                 let percent = n + '%'; //获取进度百分比
-                element.progress('demo'+lineIndex, percent); //可配合 layui 进度条元素使用
-                console.log('demo'+lineIndex);
-                lineIndex--;
-                console.log(elem);
+                console.log(thisFileArray[thisFileIndex]);
+                if (n==100) {
+                    element.progress('demo' + thisFileArray[thisFileIndex], percent); //可配合 layui 进度条元素使用
+                    thisFileIndex++;
+                }else{
+                    element.progress('demo' + thisFileArray[thisFileIndex], percent); //可配合 layui 进度条元素使用
+                }
+
+                console.log(n);
             }
             ,choose: function(obj){
                 let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
                 //读取本地文件
                 obj.preview(function(index, file, result){
-                    lineIndex++;
+                    thisFileArray.push(index);
+                    elem_progress=$('.layui-progress')
                     let file_size = ((file.size/1024).toFixed(1))<1024?((file.size/1024).toFixed(1)+' KB'):(((file.size/1024)/1024).toFixed(1)+' MB')
                     let tr = $(['<tr id="upload-'+ index +'">'
                         ,'<td>'+ file.name +'</td>'
                         ,'<td>'+file_size+'</td>'
-                        ,'<td>'
-                        +'<div class="layui-progress layui-progress-big" lay-showPercent="yes" lay-filter="demo'+lineIndex+'">'
-                        +'<div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>'
-                        +'</div>'
-                        ,'</td>'
+                        ,'<td>' +
+                        '<div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="demo'+index+'">\n' +
+                        '    <div class="layui-progress-bar" lay-percent="0%"></div>\n' +
+                        '</div>' +
+                        '</td>'
                         ,'<td>等待上传</td>'
                         ,'<td>'
                         ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
@@ -289,6 +297,7 @@
                 }
                 else if(res.code==1){
                     layer.alert(res.msg, {icon: 6});
+                    delete this.files[index];
                 }
                 else if(res.code==2){
                     layer.alert(res.msg, {icon: 6});
@@ -308,12 +317,12 @@
                 $('#testList').removeAttr("disabled"); //移除disabled属性
                 $('#testListAction').removeClass('layui-btn-disabled');
                 $('#testListAction').removeAttr("disabled"); //移除disabled属性
-                lineIndex=0;
                 changeState();
             }
             ,error: function(index, upload){
                 let tr = demoListView.find('tr#upload-'+ index)
                     ,tds = tr.children();
+                element.progress('demo'+index, 0+'%');
                 tds.eq(3).html('<span style="color: #FF5722;">上传失败</span>');
                 tds.eq(4).find('.demo-reload').removeClass('layui-hide'); //显示重传
             }
